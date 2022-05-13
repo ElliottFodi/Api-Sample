@@ -1,0 +1,18 @@
+version: '3'
+services: 
+  mongoDB:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+  
+  post-service:
+    build: .
+    environment: 
+      - MONGODB_CONNSTRING=mongoDB
+      - NODE_ENV=${NODE_ENV:-wip}
+    ports: 
+      - "8080:8080"
+      - "80:8080"
+    depends_on:
+      - mongoDB
