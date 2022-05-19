@@ -243,7 +243,7 @@ app.get('/comment/:comment_id', param('comment_id').notEmpty().isMongoId(), comm
  *               content: 
  *                 type: string
  *           example:
- *             comment_id: "paste in commentId here"
+ *             comment_id: "paste in comment_id here"
  *             content: "hello world comment updated"
  *     responses:
  *       200:

@@ -37,7 +37,7 @@ async function getPost(req, res, next){
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-        console.log('postId: ', req.params.postId)
+        console.log('post_id: ', req.params.post_id)
         const post = await postService.getPost(req.params.post_id);
         res.json({post});
     } catch (err){
