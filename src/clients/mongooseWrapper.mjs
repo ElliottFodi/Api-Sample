@@ -4,9 +4,10 @@ import { UserPost } from '../Models/postModel.mjs'
 import config from 'config';
 import {createClient}  from 'redis';
 
-const redisClient = createClient();
 
-const dbName = 'efuseMongo';
+const redisHost = config.get('redis.host')
+const redisPort = config.get('redis.port')
+const redisClient = createClient({url: config.get('redis.url')});
 
 redisClient.on("error",(err)=>{
   console.log(err);
@@ -76,11 +77,11 @@ async function clearCachedData(key, op){
       redisClient.DEL(key);
     }
 }
+
 await redisClient.connect();
 
-
 // make the pool size small because only running locally, can use env variable to alter this 
-mongoose.connect(`${config.get('mongo.url')}/${dbName}`, {maxPoolSize: 3})
+mongoose.connect(config.get('mongo.url'), {maxPoolSize: 3})
 
 async function createPost(user_id, content){
   
