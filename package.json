@@ -19,8 +19,12 @@
     "jest": "^28.1.0",
     "mongodb": "^4.5.0",
     "mongoose": "^6.3.2",
+    "redis": "^4.1.0",
     "supertest": "^6.2.3",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.3.0"
+  },
+  "imports": {
+    "#src/*": "./src/*"
   }
 }

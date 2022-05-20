@@ -1,5 +1,8 @@
 {
     "mongo": {
-      "url": "mongodb://localhost:27017"
+      "url": "mongodb://localhost:27017/efuseMongo"
+    },
+    "redis": {
+      "url": "redis://localhost:6379"
     }
 }

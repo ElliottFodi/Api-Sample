@@ -1,5 +1,8 @@
 {
     "mongo": {
-      "url": "mongodb://mongoDB:27017"
+      "url": "mongodb://mongoDB:27017/efuseMongo"
+    },
+    "redis": {
+      "url": "redis://redis-server:6379"
     }
 }
