@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
-import { UserComment } from '../Models/commentModel.mjs';
-import { UserPost } from '../Models/postModel.mjs'
+// import { UserComment } from '../Models/commentModel.mjs';
+// import { UserPost } from '../Models/postModel.mjs'
+import { UserComment } from '#src/Models/commentModel.mjs';
+import { UserPost } from '#src/Models/postModel.mjs'
 import config from 'config';
 import {createClient}  from 'redis';
 
-
-const redisHost = config.get('redis.host')
-const redisPort = config.get('redis.port')
 const redisClient = createClient({url: config.get('redis.url')});
 
 redisClient.on("error",(err)=>{
@@ -97,9 +96,7 @@ async function createPost(user_id, content){
 
 async function updatePost(_id, content){
   // clearCachedData(_id )
-  const updatedPost = await UserPost.findOneAndUpdate({ _id }, {content}, {
-    new: true
-  });
+  const updatedPost = await UserPost.findOneAndUpdate({ _id }, {content}, {new: true});
   console.log(updatedPost)
   return updatedPost
 }
@@ -140,9 +137,7 @@ async function createComment(post_id, user_id, content){
 }
 
 async function updateComment(_id, content){
-  const updatedComment = await UserComment.findOneAndUpdate({ _id }, {content}, {
-    new: true
-  });
+  const updatedComment = await UserComment.findOneAndUpdate({ _id }, {content}, {new: true});
   console.log(updatedComment)
   return updatedComment
 }

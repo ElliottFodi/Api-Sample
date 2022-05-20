@@ -23,5 +23,8 @@
     "supertest": "^6.2.3",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.3.0"
+  },
+  "imports": {
+    "#src/*": "./src/*"
   }
 }
