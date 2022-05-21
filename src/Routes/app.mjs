@@ -4,7 +4,7 @@ import postController from '../controller/postController.mjs'
 import commentController from '../controller/commentController.mjs'
 import { body, param, validationResult } from 'express-validator'
 import bodyParser from 'body-parser';
-import process from 'process';
+// import process from 'process';
 import helmet from 'helmet';
 import healthcheck from 'express-healthcheck';
 import swaggerUi from 'swagger-ui-express';
@@ -18,7 +18,7 @@ const options = {
         version: '1.0.0',
       },
     },
-    apis: ['./src/Routes/routes.mjs'],
+    apis: ['./src/Routes/app.mjs'],
   };
 const openapiSpecification = swaggerJSDoc(options);
 
@@ -28,17 +28,17 @@ app.use(bodyParser.json())
 app.use('/healthcheck', healthcheck());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 
-const port = 8080
+// const port = 8080
 
-process.on('SIGINT', function onSigint() {
-    console.log('sigint process exit');
-    process.exit();
-});
+// process.on('SIGINT', function onSigint() {
+//     console.log('sigint process exit');
+//     process.exit();
+// });
 
-process.on('SIGTERM', function onSigterm() {
-    console.log('sigterm process exit');
-    process.exit();
-});
+// process.on('SIGTERM', function onSigterm() {
+//     console.log('sigterm process exit');
+//     process.exit();
+// });
 
 app.use(helmet());
 app.disable('x-powered-by');
@@ -268,5 +268,6 @@ app.put('/comment', body('comment_id').notEmpty().isMongoId(), body('content').n
  */
 app.delete('/comment/:comment_id', param('comment_id').notEmpty().isMongoId(), commentController.deleteComment)
 
-app.listen(port, () => console.log(`Server listening at http://localhost:${port}`))
+export default app;
+// app.listen(port, () => console.log(`Server listening at http://localhost:${port}`))
 

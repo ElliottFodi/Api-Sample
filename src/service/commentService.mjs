@@ -1,6 +1,7 @@
 // retrun the sorted comments ordered by time stamp 
 // might need pagination 
-import mongooseWrapper from '../clients/mongooseWrapper.mjs'
+// import mongooseWrapper from '../clients/mongooseWrapper.mjs'
+import mongooseWrapper from '#src/clients/mongooseClient.mjs'
 
 async function createComment(post_id, user_id, content){
     console.log(`created a comment for ${user_id} : ${post_id} with text ${content}`)
