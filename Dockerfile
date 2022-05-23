@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "node", "src/Routes/routes.mjs" ]
+CMD [ "node", "src/server.mjs" ]

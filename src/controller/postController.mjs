@@ -1,4 +1,4 @@
-import postService from "../service/postService.mjs"
+import postService from "#src/service/postService.mjs"
 import { validationResult } from 'express-validator'
 
 async function createPost(req, res, next){

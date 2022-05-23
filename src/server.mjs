@@ -1,4 +1,4 @@
-import app from '#src/Routes/app.mjs'
+import app from '#src/app.mjs'
 import process from 'process';
 import redisClient from '#src/clients/redisClient.mjs'
 import monogooseClient from '#src/clients/mongooseClient.mjs'
@@ -18,6 +18,7 @@ process.on('SIGTERM', function onSigterm() {
 });
 
 await redisClient.connect()
+monogooseClient.cacheWithRedis(redisClient.getClient())
 monogooseClient.connect()
 
 const port = 8080

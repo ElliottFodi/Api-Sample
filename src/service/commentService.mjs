@@ -2,6 +2,7 @@
 // might need pagination 
 // import mongooseWrapper from '../clients/mongooseWrapper.mjs'
 import mongooseWrapper from '#src/clients/mongooseClient.mjs'
+import mongoose from 'mongoose';
 
 async function createComment(post_id, user_id, content){
     console.log(`created a comment for ${user_id} : ${post_id} with text ${content}`)
@@ -20,9 +21,14 @@ async function getComment(comment_id){
     return response;
 }
 
-async function getComments(user_id){
+async function getCommentsForUser(user_id){
     console.log(`getComments called with user id: ${user_id}`)
     return await mongooseWrapper.getCommentsByUserID(user_id);
+}
+
+async function getCommentsForPost(post_id){
+    console.log(`getComments for post ${post_id}`)
+    return await mongooseWrapper.getCommentsByPostID(post_id)
 }
 
 async function deleteComment(comment_id){
@@ -34,6 +40,7 @@ export default {
     createComment,
     updateComment,
     getComment,
-    getComments,
+    getCommentsForUser,
+    getCommentsForPost,
     deleteComment
 }

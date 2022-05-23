@@ -4,7 +4,7 @@ import {createClient}  from 'redis';
 let client;
 
 function getClient(){
-    if(!client){
+    if(client === undefined){
         client = createClient({url: config.get('redis.url')});
         client.on("error",(err)=>{
             console.log(err);
@@ -22,11 +22,16 @@ async function connect(){
     await client.connect();
 }
 
+function setClient(newClient){
+    client = newClient
+}
+
 function disconnect(){
     client.quit();
 }
 
 export default {
+    setClient,
     connect,
     disconnect,
     getClient
