@@ -1,4 +1,5 @@
-import mongooseWrapper from '../clients/mongooseWrapper.mjs'
+// import mongooseWrapper from '../clients/mongooseWrapper.mjs'
+import mongooseWrapper from '#src/clients/mongooseClient.mjs'
 
 async function createPost(user_id, content){
     console.log(`created a post for ${user_id} with text ${content}`)

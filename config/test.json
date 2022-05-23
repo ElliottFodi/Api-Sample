@@ -1,0 +1,8 @@
+{
+    "mongo": {
+        "url": "test"
+    },
+    "redis": {
+        "url": "test"
+    }
+}

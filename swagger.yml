@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: Post/Comment API
+  description: Post/Comment micro-service for CRUD operations
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080"
+    description: Swagger for local development
+paths:
+  /post:
+    post:
+      tags:
+        - Post
+      summery: Create post for a given user_iD
+      requestBody: 
+        description: New post request object
+        required: true
+        content:
+          application/json: 
+            schema:
+              type: object 
+              properties:
+                user_id:
+                  type: string
+                content: 
+                  type: string
+            example:
+              user_id: "1234"
+              content: "hello world post"
+      responses:
+        200:
+          description: post_id.
+    put:
+      tags:
+        - Post
+      summery: Update a post for a given post_id
+      requestBody: 
+        description: Update request object
+        required: true
+        content:
+          application/json: 
+            schema:
+              type: object 
+              properties:
+                post_id:
+                  type: string
+                content: 
+                  type: string
+            example:
+              post_id: "paste post_id here"
+              content: "hello world post update"
+      responses:
+        200:
+          description: updated post Object.
+  /posts/{user_id}:
+    get:
+      tags:
+        - Post
+      summery: Get all posts for a given user_id
+      parameters:
+        - in: path
+          name: user_id
+          type: string
+          required: true
+          description: Get all posts for a given user_id 
+      responses:
+        200:
+          description: post Objects.
+  /post/{post_id}:
+    get:
+      tags:
+        - Post
+      summery: Get a post for a given post_id
+      parameters:
+        - in: path
+          name: post_id
+          type: string
+          required: true
+          description: get a post for a given post_id
+      responses:
+        200:
+          description: post Object.
+    delete:
+      tags:
+        - Post
+      summery: Delete a post for a given post_id
+      parameters:
+        - in: path
+          name: post_id
+          type: string
+          required: true
+          description: delete a post for a given post_id 
+      responses:
+        200:
+          description: deleted post Object.
+  /comment:
+    post:
+      tags:
+        - Comment
+      summery: Create comment for a given user_id
+      requestBody: 
+        description: New a comment object
+        required: true
+        content:
+          application/json: 
+            schema:
+              type: object 
+              properties:
+                post_id: 
+                  type: string
+                user_id:
+                  type: string
+                content: 
+                  type: string
+            example:
+              post_id: "paste post_id here"
+              user_id: "9999"
+              content: "hello world comment"
+      responses:
+        200:
+          description: comment_id.
+    put:
+      tags:
+        - Comment
+      summery: Update a comment for a given comment_id
+      requestBody: 
+        description: Update Comment object
+        required: true
+        content:
+          application/json: 
+            schema:
+              type: object 
+              properties:
+                comment_id:
+                  type: string
+                content: 
+                  type: string
+            example:
+              comment_id: "paste in comment_id here"
+              content: "hello world comment updated"
+      responses:
+        200:
+          description: updated comment object.
+  /comment/user/{user_id}:
+    get:
+      tags:
+        - Comment
+      summery: Get all comments for a given user_id
+      parameters:
+        - in: path
+          name: user_id
+          type: string
+          required: true
+          description: Get all comments for a given user_id
+      responses:
+        200:
+          description: comment Objects.
+  /comment/post/{post_id}:
+    get:
+      tags:
+        - Comment
+      summery: Get all comments for a given post_id
+      parameters:
+        - in: path
+          name: post_id
+          type: string
+          required: true
+          description: Get all comments for a given post_id
+      responses:
+        200:
+          description: comment Objects.
+  /comment/{comment_id}:
+    get:
+      tags:
+        - Comment
+      summery: Get a comment for a given comment_id
+      parameters:
+        - in: path
+          name: comment_id
+          type: string
+          required: true
+          description: get a comment for a given comment_iD 
+      responses:
+        200:
+          description: comment Object.
+    delete:
+      tags:
+        - Comment
+      summery: Delete a comment for a given comment_id
+      parameters:
+        - in: path
+          name: comment_id
+          type: string
+          required: true
+          description: delete a comment for a given comment_id 
+      responses:
+        200:
+          description: deleted comment object.
