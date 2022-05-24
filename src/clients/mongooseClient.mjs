@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
-import { UserComment } from '#src/models/commentModel.mjs';
-import { UserPost } from '#src/models/postModel.mjs'
+import { UserComment } from '#src/Models/commentModel.mjs';
+import { UserPost } from '#src/Models/postModel.mjs'
 import config from 'config';
-// import cachedClient from '#src/clients/redisClient.mjs'
+import winston from 'winston';
 
 function cacheWithRedis(redisClient){
-  // const redisClient = cachedClient.getClient()
-
   mongoose.Query.prototype.cache = function(time = 60 * 60){
     this.cacheMe = true; 
     this.cacheTime = time;
@@ -17,7 +15,7 @@ function cacheWithRedis(redisClient){
   mongoose.Model.prototype.save = async function(){
     let result = await save.apply(this, arguments);
     
-    // is a post_id is present, a comment is being created, 
+    // if a post_id is present, a comment is being created, 
     // bust the cache for (get all comments for a user) and (get all comments for a post)
     if(this.post_id){
       clearCachedData(`comments${this.post_id}`, 'save');
@@ -39,22 +37,21 @@ function cacheWithRedis(redisClient){
     // (comments + user_id) all comments for a user
     // (comments + post_id) all comments for a post
     const key  = `${collectionName}${query._id || query.user_id || query.post_id}`
-    console.log("KEY: ", key)
+    winston.debug(`KEY: ${key}`)
     
     if(this.cacheMe){   
-      console.log('collectionName: ', collectionName, " query: ", this.getQuery(), " options: ", this.getOptions(), " op: ", this.op);
       const cachedResults = await redisClient.GET(key);
       
       if (cachedResults){
-        // if you found cached results return it;, You can't insert json straight to redis needs to be a string 
-        console.log('retrieved from redis cache: ', cachedResults)
+        // if you found cached results return it;, You can't insert json straight to redis, it needs to be a string 
+        winston.debug(`retrieved from redis cache:  ${cachedResults}`)
         const result = JSON.parse(cachedResults);
         return result;
       }
       //else get results from Database then cache it
       const result = await exec.apply(this, arguments); 
 
-      console.log("cache set")
+      winston.debug(`Cache set for key ${key}`)
       redisClient.set(key, JSON.stringify(result))
       return result;
     }
@@ -79,7 +76,7 @@ function cacheWithRedis(redisClient){
     const allowedCacheOps = ["find","findById","findOne"];
     // if operation is insert or delete or update for any collection that exists and has cached values delete them
       if (!allowedCacheOps.includes(op) && await redisClient.EXISTS(key)){
-        console.log("cache cleared")
+        winston.debug(`Cache cleared for key ${key}`)
         redisClient.DEL(key);
       }
   }
@@ -101,41 +98,38 @@ async function createPost(user_id, content){
   });
 
   await post.save();
+  winston.debug(`created post, post_id: ${post._id}`)
   return post._id
-  // mongoose.connection.close()
 }
 
 async function updatePost(_id, content){
-  // clearCachedData(_id )
   const updatedPost = await UserPost.findOneAndUpdate({ _id }, {content}, {new: true});
-  console.log(updatedPost)
+  winston.debug(`updated post: ${updatedPost}`)
   return updatedPost
 }
 
 async function getPostByID(_id){
-  // const retrievedPost = await UserPost.findById(_id)
-  // console.log(retrievedPost)
-  // return retrievedPost
-  return await UserPost.findById(_id).cache()
+  const retrievedPost = await UserPost.findById(_id).cache()
+  winston.debug(`retrieved post by id: ${retrievedPost}`)
+  return retrievedPost
 }
 
 async function getPostsByUserID(user_id){
   const allPosts = await UserPost.find({user_id}).cache()
-  console.log(allPosts)
+  winston.debug(`retrieved all posts for user: ${allPosts}`)
   return allPosts
 }
 
 async function deletePostByID(_id){
   const deletedResponse = await UserPost.findByIdAndDelete(_id);
+  winston.debug(`deleted post by id: ${deletedResponse}`)
   return deletedResponse
 }
 
 /*
  * Comment Section
  */
-async function createComment(post_id, user_id, content){
-  // make the pool size small because only running locally, can use env variable to alter this 
-  
+async function createComment(post_id, user_id, content){  
   const comment = new UserComment({
     post_id, 
     user_id,
@@ -143,36 +137,37 @@ async function createComment(post_id, user_id, content){
   });
 
   await comment.save();
+  winston.debug(`created comment, comment_id: ${comment._id}`)
   return comment._id
-  // mongoose.connection.close()
 }
 
 async function updateComment(_id, content){
   const updatedComment = await UserComment.findOneAndUpdate({ _id }, {content}, {new: true});
-  console.log(updatedComment)
+  winston.debug(`updated comment: ${updatedComment}`)
   return updatedComment
 }
 
 async function getCommentByID(_id){
   const retrievedComment = await UserComment.findById(_id).cache()
-  console.log(retrievedComment)
+  winston.debug(`retrieved comment by id: ${retrievedComment}`)
   return retrievedComment
 }
 
 async function getCommentsByUserID(user_id){
   const allComments = await UserComment.find({ user_id }).cache();
-  console.log(allComments)
+  winston.debug(`retrieved all comments for user: ${allComments}`)
   return allComments
 }
 
 async function getCommentsByPostID(post_id){
   const allComments = await UserComment.find({ post_id }).cache();
-  console.log(allComments)
+  winston.debug(`retrieved all comments for post: ${allComments}`)
   return allComments
 }
 
 async function deleteCommentByID(_id){
   const deletedResponse = await UserComment.findByIdAndDelete(_id);
+  winston.debug(`deleted comment by id: ${deletedResponse}`)
   return deletedResponse
 }
 

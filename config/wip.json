@@ -4,5 +4,8 @@
     },
     "redis": {
       "url": "redis://redis-server:6379"
+    },
+    "log":{
+      "level": "info"
     }
 }

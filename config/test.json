@@ -4,5 +4,8 @@
     },
     "redis": {
         "url": "test"
+    },
+    "log":{
+      "level": "info"
     }
 }

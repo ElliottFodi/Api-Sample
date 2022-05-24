@@ -16,13 +16,6 @@ Improvments that can be added to the project:
 - add jenkins file 
 - when deleting a post, delete all comments as well
 
-Tonight:
-- DONE check service endpoints 
-- check docker 
-- remove console logs 
-- DONE add more end to end tests
-- DONE move service and app out or src 
-
 # Diagram 
 ![post-comment-diagram](./readme-images/post-comment-service.png)
 
