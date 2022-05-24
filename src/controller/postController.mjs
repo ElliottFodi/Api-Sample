@@ -2,7 +2,6 @@ import postService from "#src/service/postService.mjs"
 import { validationResult } from 'express-validator'
 
 async function createPost(req, res, next){
-    // let ua = new UAParser(req.headers['user-agent']); maybe get an auth header
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -10,8 +9,6 @@ async function createPost(req, res, next){
     
     try {
         const response = await postService.createPost(req.body.user_id, req.body.content)
-        console.log(response)
-        //TODO decide what to return.  maybe we return the post id 
         res.json({post_id: response});
     } catch (err){
         next(err)
@@ -37,7 +34,6 @@ async function getPost(req, res, next){
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-        console.log('post_id: ', req.params.post_id)
         const post = await postService.getPost(req.params.post_id);
         res.json({post});
     } catch (err){

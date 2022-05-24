@@ -2,6 +2,12 @@ import app from '#src/app.mjs'
 import process from 'process';
 import redisClient from '#src/clients/redisClient.mjs'
 import monogooseClient from '#src/clients/mongooseClient.mjs'
+import winston from 'winston'
+import config from 'config';
+
+winston.level = config.get('log.level');
+const consoleTransport = new winston.transports.Console();
+winston.add(consoleTransport);
 
 process.on('SIGINT', function onSigint() {
     console.log('sigint process exit');

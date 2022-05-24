@@ -13,7 +13,6 @@ async function createComment(req, res, next){
             req.body.user_id, 
             req.body.content
         )
-        console.log(response)
         res.json({comment_id: response});
     } catch (err){
         next(err)

@@ -2,13 +2,14 @@ import app from '#src/app.mjs'
 import request  from 'supertest'
 import mongoose from 'mongoose'
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import {jest} from '@jest/globals'
 import redisClient from '#src/clients/redisClient'
 import { RedisMemoryServer } from 'redis-memory-server';
 import mongooseClient from '#src//clients/mongooseClient.mjs';
 import {createClient}  from 'redis';
-import { UserComment } from '#src/models/commentModel.mjs';
-import { UserPost } from '#src/models/postModel.mjs'
+import { UserComment } from '#src/Models/commentModel.mjs';
+import { UserPost } from '#src/Models/postModel.mjs'
+import winston from 'winston'
+import config from 'config'
 
 describe("Post/Comment, End to End CRUD tests:", () => {
   let con;
@@ -29,6 +30,11 @@ describe("Post/Comment, End to End CRUD tests:", () => {
   const commentContent2 = 'comment content 2'
   
   beforeAll(async () => {
+
+    // hack because winston was noisy, its initialized in the server which is not called
+    winston.level = config.get('log.level');
+    const consoleTransport = new winston.transports.Console();
+    winston.add(consoleTransport);
 
     /* set up redis in memory server */
     redisServer = new RedisMemoryServer();
@@ -179,7 +185,6 @@ describe("Post/Comment, End to End CRUD tests:", () => {
   test("delete comment by comment_id", async () => {
     let response = await request(app).delete(`/comment/${fakeCommentId2}`)
     expect(response.statusCode).toBe(200);
-    console.log(response.body)
     expect(response.body.deletedComment).toHaveProperty('_id')
     expect(JSON.stringify(response.body.deletedComment._id)).toBe(JSON.stringify(fakeCommentId2))
 
